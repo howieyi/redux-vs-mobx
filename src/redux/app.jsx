@@ -4,8 +4,7 @@ import Counter from "./components/counter.jsx";
 export default function App() {
   return (
     <div>
-      <h1>redux</h1>
-      <h2>1. 计步器</h2>
+      <h1>redux 计步器</h1>
       <Counter />
     </div>
   );

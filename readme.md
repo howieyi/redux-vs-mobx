@@ -1,6 +1,8 @@
-# react 状态管理使用比较
+# redux、mobx 对比
 
-## redux
+> react、mobx 在 react 中的使用对比
+
+## redux 状态管理
 
 ### redux 基本使用流程
 
@@ -195,3 +197,99 @@ function mapDispatchToProps(dispatch) {
   };
 }
 ```
+
+## mobx 状态管理
+
+### mobx 基本使用流程
+
+1. 创建一个 store
+
+> 定义一个 class，使用注解 `@observable` 使值可响应，使用 `@action` 定义响应方法
+
+```javascript
+import { observable, action } from "mobx";
+
+class CounterStore {
+  @observable step = 0;
+
+  @action
+  doStep = () => {
+    this.step++;
+  };
+
+  @action
+  doReset = () => {
+    this.step = 0;
+  };
+}
+
+// 抛出一个实例
+export default new CounterStore();
+```
+
+2. `Provider` 引入 `counterStore`
+
+> 所有的 store 都在顶层通过 Provider 混入到全局
+
+```javascript
+<Provider counterStore={counterStore}>
+  <div>
+    <h1>mobx 计步器</h1>
+    <CounterApp />
+  </div>
+</Provider>
+```
+
+3. `inject` 将需要的状态混入到组件的 props，并通过 `observer` 使组件可响应
+
+```javascript
+// 将 counterStore 混入到 Counter 的 props 中
+const CounterApp = inject("counterStore")(observer(Counter));
+```
+
+4. 组件中调用对应的 state 与 action
+
+```javascript
+function Counter({ counterStore }) {
+  const { step, doStep, doReset } = counterStore;
+
+  return (
+    <div>
+      <span>计步器：{step}</span>
+      {"  "}
+      <button onClick={() => doStep()}>计步</button>
+      {"  "}
+      <button onClick={() => doReset()}>重置</button>
+    </div>
+  );
+}
+```
+
+### mobx 数据流
+
+> mobx 的思路比较简单，通过 action -> state -> view，下图明确提现了 mobx 的数据交互流程
+
+![mobx数据流](./docs/mobx数据流.png)
+
+## 总结
+
+### redux 优点
+
+1. 流程规范，按照官方推荐的规范和结合团队风格打造一套属于自己的流程。
+2. 函数式编程，在 `reducer` 中，接受输入，然后输出，不会有副作用发生，幂等性。
+3. 可追踪性，很容易追踪产生 BUG 的原因。
+
+### redux 缺点
+
+1. 流畅太繁琐，需要写各种 type、action、reducer，不易上手，初学者可能会觉得比较绕。
+2. 同步数据流，异步需要引用其他库（redux-thunk/redux-saga 等）或者通过异步 dispatch 的技巧。
+
+### mobx 优点
+
+1. 容易上手，class 中管理 state、action，使用简单，基于 Proxy 实现的数据响应式。
+2. 写更少的代码，完成更多的事。不会跟 redux 一样写非常多的 action、type。
+3. 使组件更加颗粒化拆分，并且业务更加容易抽象。
+
+### mobx 缺点
+
+1. 过于自由，mobx 提供的约定及模版代码很少，如果团队不做一些约定，容易导致团队代码风格不统一。
