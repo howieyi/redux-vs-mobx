@@ -6,7 +6,7 @@ module.exports = {
   devtool: "inline-source-map",
 
   entry: {
-    index: "./src/index.jsx",
+    redux: "./src/redux/index.jsx",
   },
 
   devServer: {
