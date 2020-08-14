@@ -1,6 +1,6 @@
-# redux、mobx 对比
+# 梳理下redux、mobx 在react的应用
 
-> react、mobx 在 react 中的使用对比
+> redux、mobx 在 react 中的使用对比
 
 ## redux 状态管理
 
