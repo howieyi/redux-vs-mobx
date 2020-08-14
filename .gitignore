@@ -1,0 +1,6 @@
+node_modules
+.ideas
+.vscode
+.DS_stone
+yarn.lock
+package-lock.json
